@@ -6,10 +6,12 @@ from dataclasses import dataclass
 
 from sklearn.model_selection import train_test_split
 from src.components import data_transformation
+from src.components import model_trainer
 
 from src.exception import CustomException
 from src.logger import logging
 from src.components.data_transformation import DataTransformation, DataTransformationConfig
+from src.components.model_trainer import ModelTrainer, ModelTrainerConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -48,10 +50,20 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e,sys)
         
-if __name__=="__main__":
-    obj=DataIngestion()
-    train_data,test_data=obj.initiate_data_ingestion()
+if __name__ == "__main__":
+    data_ingestion = DataIngestion()
+    train_data, test_data = data_ingestion.initiate_data_ingestion()
     
-    data_transformation=DataTransformation()
-    data_transformation.initiate_data_transformation(train_data,test_data)
+    data_transformation_instance = DataTransformation()
+    train_arr, test_arr, _ = data_transformation_instance.initiate_data_transformation(train_data, test_data)
+    
+    model_trainer_instance = ModelTrainer()
+    score = model_trainer_instance.initiate_model_trainer(train_arr, test_arr)
+    
+    print(f"Final Model Score is: {score}")
+
+ 
+    
+    
+    
         
